@@ -12,13 +12,13 @@ Game::~Game() {}
 void Game::start() {
     printf("Up: \'w\', Down: \'w\', Left: \'w\', Right: \'d\'\n");
 
+    randomGenerate(2);
+    printCheckerboard();
+
     int round = 0;
     while (!isGameOver()) {
         printf("Round: %d\n", round);
         printf("Sorce: %d\n", _sorce);
-
-        randomGenerate(2);
-        printCheckerboard();
 
         char direction[2] = "w";
         scanf("%s", direction);
@@ -27,39 +27,49 @@ void Game::start() {
 
         switch (direction[0]) {
             case 'w':
-                move(MOVE_UP);
+                move(kMoveUp);
                 break;
             case 's':
-                move(MOVE_DOWN);
+                move(kMoveDown);
                 break;
             case 'a':
-                move(MOVE_LEFT);
+                move(kMoveLeft);
                 break;
             case 'd':
-                move(MOVE_RIGHT);
+                move(kMoveRight);
                 break;
         }
+
+        printCheckerboard();
 
         printf("\n");
     }
 }
 
-int** Game::getCheckerboard() {
-    return (int**)_checkerboard;
+int** Game::getCopyCheckerboard() {
+    int** returnCheckerboard = new int*[CHECKERBOARD_LENGTH];
+    for (int row = 0; row < CHECKERBOARD_LENGTH; row++) {
+        *(returnCheckerboard+row) = new int[CHECKERBOARD_LENGTH];
+        for (int col = 0; col < CHECKERBOARD_LENGTH; col++) {
+            returnCheckerboard[row][col] = _checkerboard[row][col];
+        }
+    }
+
+    return returnCheckerboard;
 }
 
 void Game::move(int direction) {
     switch (direction) {
-        case MOVE_UP:
+        case kMoveUp:
             _sorce += moveUp();
             break;
-        case MOVE_DOWN:
+        case kMoveDown:
             _sorce += moveDown();
             break;
-        case MOVE_LEFT:
+        case kMoveLeft:
             _sorce += moveLeft();
             break;
-        case MOVE_RIGHT:
+        case kMoveRight:
             _sorce += moveRight();
             break;
         default:
@@ -67,6 +77,7 @@ void Game::move(int direction) {
             break;
     }
 
+    randomGenerate(2);
     setupEmptyList();
 }
 
@@ -80,7 +91,9 @@ void Game::printCheckerboard() {
 }
 
 void Game::initCheckerBoard() {
+    _checkerboard = new int*[CHECKERBOARD_LENGTH];
     for (int row = 0; row < CHECKERBOARD_LENGTH; row++) {
+        *(_checkerboard+row) = new int[CHECKERBOARD_LENGTH];
         for (int col = 0; col < CHECKERBOARD_LENGTH; col++) {
             _checkerboard[row][col] = 0;
         }
@@ -113,16 +126,16 @@ void Game::randomGenerate(int generate_amount) {
     }
 }
 
-void Game::mergeGrid(CheckerboardIndex target, CheckerboardIndex operate, int &reward, CheckerboardIndex &stop_index) {
-    if ((_checkerboard[target.row][target.col] == _checkerboard[operate.row][operate.col]) ||
-        (_checkerboard[target.row][target.col] == 0)) {
+void Game::mergeGrid(int **checkerboard, CheckerboardIndex target, CheckerboardIndex operate, int &reward, CheckerboardIndex &stop_index) {
+    if ((checkerboard[target.row][target.col] == checkerboard[operate.row][operate.col]) ||
+        (checkerboard[target.row][target.col] == 0)) {
 
-        if (_checkerboard[target.row][target.col] != 0) {
-            reward += _checkerboard[target.row][target.col] + _checkerboard[operate.row][operate.col];
+        if (checkerboard[target.row][target.col] != 0) {
+            reward += checkerboard[target.row][target.col] + checkerboard[operate.row][operate.col];
             stop_index = operate;
         }
-        _checkerboard[target.row][target.col] += _checkerboard[operate.row][operate.col];
-        _checkerboard[operate.row][operate.col] = 0;
+        checkerboard[target.row][target.col] += checkerboard[operate.row][operate.col];
+        checkerboard[operate.row][operate.col] = 0;
     }
 }
 
@@ -135,7 +148,7 @@ int Game::moveUp() {
             for (int i = row; i > stop_index.row; i--) {
                 CheckerboardIndex target = {i-1, col};
                 CheckerboardIndex operate = {i, col};
-                mergeGrid(target, operate, reward, stop_index);
+                mergeGrid(_checkerboard, target, operate, reward, stop_index);
             }
         }
     }
@@ -151,7 +164,7 @@ int Game::moveDown() {
             for (int i = row; i < stop_index.row; i++) {
                 CheckerboardIndex target = {i+1, col};
                 CheckerboardIndex operate = {i, col};
-                mergeGrid(target, operate, reward, stop_index);
+                mergeGrid(_checkerboard, target, operate, reward, stop_index);
             }
         }
     }
@@ -166,7 +179,7 @@ int Game::moveLeft() {
             for (int i = col; i > stop_index.col; i--) {
                 CheckerboardIndex target = {row, i-1};
                 CheckerboardIndex operate = {row, i};
-                mergeGrid(target, operate, reward, stop_index);
+                mergeGrid(_checkerboard, target, operate, reward, stop_index);
             }
         }
     }
@@ -182,7 +195,7 @@ int Game::moveRight() {
             for (int i = col; i < stop_index.col; i++) {
                 CheckerboardIndex target = {row, i+1};
                 CheckerboardIndex operate = {row, i};
-                mergeGrid(target, operate, reward, stop_index);
+                mergeGrid(_checkerboard, target, operate, reward, stop_index);
             }
         }
     }
@@ -190,6 +203,10 @@ int Game::moveRight() {
 }
 
 bool Game::isGameOver() {
+    if (_empty_list.size() > 0) {
+        return false;
+    }
+
     for (int row = 0; row < CHECKERBOARD_LENGTH; row++) {
         for (int col = 0; col < CHECKERBOARD_LENGTH; col++) {
             if ((row+1) < CHECKERBOARD_LENGTH) {
@@ -208,3 +225,66 @@ bool Game::isGameOver() {
 
     return true;
 }
+int Game::moveUpWithCheckerboard(int **checkerboard) {
+    int reward = 0;
+    for (int col = 0; col < CHECKERBOARD_LENGTH; col ++) {
+        CheckerboardIndex stop_index = {0, col};
+        for (int row = 0; row < CHECKERBOARD_LENGTH; row++) {
+
+            for (int i = row; i > stop_index.row; i--) {
+                CheckerboardIndex target = {i-1, col};
+                CheckerboardIndex operate = {i, col};
+                mergeGrid(checkerboard, target, operate, reward, stop_index);
+            }
+        }
+    }
+    return reward;
+}
+
+int Game::moveDownWithCheckerboard(int **checkerboard) {
+    int reward = 0;
+    for (int col = 0; col < CHECKERBOARD_LENGTH; col ++) {
+        CheckerboardIndex stop_index = {CHECKERBOARD_LENGTH - 1, col};
+        for (int row = CHECKERBOARD_LENGTH - 1; row >= 0; row--) {
+
+            for (int i = row; i < stop_index.row; i++) {
+                CheckerboardIndex target = {i+1, col};
+                CheckerboardIndex operate = {i, col};
+                mergeGrid(checkerboard, target, operate, reward, stop_index);
+            }
+        }
+    }
+    return reward;}
+
+int Game::moveLeftWithCheckerboard(int **checkerboard) {
+    int reward = 0;
+    for (int row = 0; row < CHECKERBOARD_LENGTH; row++) {
+        CheckerboardIndex stop_index = {row, 0};
+        for (int col = 0; col < CHECKERBOARD_LENGTH; col++) {
+
+            for (int i = col; i > stop_index.col; i--) {
+                CheckerboardIndex target = {row, i-1};
+                CheckerboardIndex operate = {row, i};
+                mergeGrid(checkerboard, target, operate, reward, stop_index);
+            }
+        }
+    }
+    return reward;
+}
+
+int Game::moveRightWithCheckerboard(int **checkerboard) {
+    int reward = 0;
+    for (int row = 0; row < CHECKERBOARD_LENGTH; row++) {
+        CheckerboardIndex stop_index = {row, CHECKERBOARD_LENGTH - 1};
+        for (int col = CHECKERBOARD_LENGTH - 1; col >= 0; col--) {
+
+            for (int i = col; i < stop_index.col; i++) {
+                CheckerboardIndex target = {row, i+1};
+                CheckerboardIndex operate = {row, i};
+                mergeGrid(checkerboard, target, operate, reward, stop_index);
+            }
+        }
+    }
+    return reward;
+}
+
