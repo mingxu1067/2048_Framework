@@ -23,8 +23,6 @@ void Game::start() {
         char direction[2] = "w";
         scanf("%s", direction);
 
-        printf("%s", direction);
-
         switch (direction[0]) {
             case 'w':
                 move(kMoveUp);
@@ -40,6 +38,7 @@ void Game::start() {
                 break;
         }
 
+        randomGenerate(2);
         printCheckerboard();
 
         printf("\n");
@@ -77,14 +76,13 @@ void Game::move(int direction) {
             break;
     }
 
-    randomGenerate(2);
     setupEmptyList();
 }
 
 void Game::printCheckerboard() {
     for (int row = 0; row < CHECKERBOARD_LENGTH; row++) {
         for (int col = 0; col < CHECKERBOARD_LENGTH; col++) {
-            printf("%3d", _checkerboard[row][col]);
+            printf("%5d", _checkerboard[row][col]);
         }
         printf("\n");
     }
