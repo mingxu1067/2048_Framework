@@ -26,6 +26,8 @@ public:
 
     int** getCopyCheckerboard();
 
+    void randomGenerate(int generate_amount);
+
     bool isGameOver();
 
     static int moveUp(int **checkerboard);
@@ -44,8 +46,6 @@ private:
     void initCheckerBoard();
 
     void setupEmptyList();
-
-    void randomGenerate(int generate_amount);
 
     static void mergeGrid(int **checkerboard, CheckerboardIndex target, CheckerboardIndex operate, int &sorce, CheckerboardIndex &stop_index);
 

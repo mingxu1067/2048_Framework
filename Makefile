@@ -7,7 +7,7 @@ EXEC = 2048
 INCDIR = include
 INC = -I ./$(INCDIR)
 BUILD = build
-LIB_NAME = game2048_lib
+LIB_NAME = libgame2048
 SRCDIR = src
 OBJDIR = obj
 TEST = test
@@ -20,7 +20,7 @@ game2048_obj: main.o game.o linked-list.o
 
 game2048_lib: game2048_obj
 	@mkdir -p $(BUILD)/$(LIB_NAME)
-	$(AR) rvs $(BUILD)/$(LIB_NAME)/$@.a $(OBJDIR)/game.o $(OBJDIR)/linked-list.o
+	$(AR) rvs $(BUILD)/$(LIB_NAME)/$(LIB_NAME).a $(OBJDIR)/game.o $(OBJDIR)/linked-list.o
 	cp -r $(INCDIR) $(BUILD)/$(LIB_NAME)
 
 main.o: $(SRCDIR)/main.$(SRCEXT)
