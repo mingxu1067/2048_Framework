@@ -18,7 +18,7 @@ void Game::start() {
     int round = 0;
     while (!isGameOver()) {
         printf("Round: %d\n", round);
-        printf("Sorce: %d\n", _sorce);
+        printf("Sorce: %ld\n", _sorce);
 
         char direction[2] = "w";
         scanf("%s", direction);
@@ -55,6 +55,10 @@ int** Game::getCopyCheckerboard() {
     }
 
     return returnCheckerboard;
+}
+
+long Game::get_score() {
+    return _sorce;
 }
 
 void Game::move(int direction) {
