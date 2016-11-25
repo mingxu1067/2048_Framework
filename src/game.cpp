@@ -124,7 +124,7 @@ void Game::randomGenerate(int generate_amount) {
     }
 }
 
-void Game::mergeGrid(int **checkerboard, CheckerboardIndex target, CheckerboardIndex operate, int &reward, CheckerboardIndex &stop_index) {
+void Game::mergeGrid(int **checkerboard, CheckerboardIndex target, CheckerboardIndex operate, long &reward, CheckerboardIndex &stop_index) {
     if ((checkerboard[target.row][target.col] == checkerboard[operate.row][operate.col]) ||
         (checkerboard[target.row][target.col] == 0)) {
 
@@ -160,8 +160,8 @@ bool Game::isGameOver() {
 
     return true;
 }
-int Game::moveUp(int **checkerboard) {
-    int reward = 0;
+long Game::moveUp(int **checkerboard) {
+    long reward = 0;
     for (int col = 0; col < CHECKERBOARD_LENGTH; col ++) {
         CheckerboardIndex stop_index = {0, col};
         for (int row = 0; row < CHECKERBOARD_LENGTH; row++) {
@@ -176,8 +176,8 @@ int Game::moveUp(int **checkerboard) {
     return reward;
 }
 
-int Game::moveDown(int **checkerboard) {
-    int reward = 0;
+long Game::moveDown(int **checkerboard) {
+    long reward = 0;
     for (int col = 0; col < CHECKERBOARD_LENGTH; col ++) {
         CheckerboardIndex stop_index = {CHECKERBOARD_LENGTH - 1, col};
         for (int row = CHECKERBOARD_LENGTH - 1; row >= 0; row--) {
@@ -191,8 +191,8 @@ int Game::moveDown(int **checkerboard) {
     }
     return reward;}
 
-int Game::moveLeft(int **checkerboard) {
-    int reward = 0;
+long Game::moveLeft(int **checkerboard) {
+    long reward = 0;
     for (int row = 0; row < CHECKERBOARD_LENGTH; row++) {
         CheckerboardIndex stop_index = {row, 0};
         for (int col = 0; col < CHECKERBOARD_LENGTH; col++) {
@@ -207,8 +207,8 @@ int Game::moveLeft(int **checkerboard) {
     return reward;
 }
 
-int Game::moveRight(int **checkerboard) {
-    int reward = 0;
+long Game::moveRight(int **checkerboard) {
+    long reward = 0;
     for (int row = 0; row < CHECKERBOARD_LENGTH; row++) {
         CheckerboardIndex stop_index = {row, CHECKERBOARD_LENGTH - 1};
         for (int col = CHECKERBOARD_LENGTH - 1; col >= 0; col--) {
