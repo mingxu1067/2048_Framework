@@ -7,6 +7,7 @@ Game::Game() {
     initCheckerBoard();
     _empty_list = LinkedList();
     setupEmptyList();
+    _sorce = 0;
 }
 
 Game::~Game() {}
