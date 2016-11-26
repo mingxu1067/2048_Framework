@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include "game.h"
 
+bool Game::_is_move_work;
+
 Game::Game() {
     initCheckerBoard();
     _empty_list = LinkedList();
@@ -128,9 +130,15 @@ void Game::randomGenerate(int generate_amount) {
     }
 }
 
+bool Game::isMoveWork() {
+    return _is_move_work;
+}
+
 void Game::mergeGrid(int **checkerboard, CheckerboardIndex target, CheckerboardIndex operate, long &reward, CheckerboardIndex &stop_index) {
     if ((checkerboard[target.row][target.col] == checkerboard[operate.row][operate.col]) ||
         (checkerboard[target.row][target.col] == 0)) {
+
+        _is_move_work = true;
 
         if (checkerboard[target.row][target.col] != 0) {
             reward += checkerboard[target.row][target.col] + checkerboard[operate.row][operate.col];
@@ -165,6 +173,7 @@ bool Game::isGameOver() {
     return true;
 }
 long Game::moveUp(int **checkerboard) {
+    _is_move_work = false;
     long reward = 0;
     for (int col = 0; col < CHECKERBOARD_LENGTH; col ++) {
         CheckerboardIndex stop_index = {0, col};
@@ -181,6 +190,7 @@ long Game::moveUp(int **checkerboard) {
 }
 
 long Game::moveDown(int **checkerboard) {
+    _is_move_work = false;
     long reward = 0;
     for (int col = 0; col < CHECKERBOARD_LENGTH; col ++) {
         CheckerboardIndex stop_index = {CHECKERBOARD_LENGTH - 1, col};
@@ -196,6 +206,7 @@ long Game::moveDown(int **checkerboard) {
     return reward;}
 
 long Game::moveLeft(int **checkerboard) {
+    _is_move_work = false;
     long reward = 0;
     for (int row = 0; row < CHECKERBOARD_LENGTH; row++) {
         CheckerboardIndex stop_index = {row, 0};
@@ -212,6 +223,7 @@ long Game::moveLeft(int **checkerboard) {
 }
 
 long Game::moveRight(int **checkerboard) {
+    _is_move_work = false;
     long reward = 0;
     for (int row = 0; row < CHECKERBOARD_LENGTH; row++) {
         CheckerboardIndex stop_index = {row, CHECKERBOARD_LENGTH - 1};
