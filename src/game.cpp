@@ -41,7 +41,7 @@ void Game::start() {
                 break;
         }
 
-        randomGenerate(2);
+        randomGenerate(1);
         printCheckerboard();
 
         printf("\n");
