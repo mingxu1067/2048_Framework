@@ -4,6 +4,7 @@
 bool Game::_is_move_work;
 
 Game::Game() {
+    srand(time(NULL));
     initCheckerBoard();
     _empty_list = LinkedList();
     setupEmptyList();
@@ -119,7 +120,6 @@ void Game::setupEmptyList() {
 }
 
 void Game::randomGenerate(int generate_amount) {
-    srand(time(NULL));
     for (int i = 0; i < generate_amount; i++) {
         if (_empty_list.isEmpty()) {
             return;
