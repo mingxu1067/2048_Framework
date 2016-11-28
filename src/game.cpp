@@ -21,7 +21,7 @@ void Game::start() {
 
     int round = 0;
     while (!isGameOver()) {
-        printf("Round: %d\n", round);
+        printf("Round: %d\n", ++round);
         printf("Sorce: %ld\n", _sorce);
 
         char direction[2] = "w";
