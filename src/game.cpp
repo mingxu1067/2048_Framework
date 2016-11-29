@@ -11,7 +11,9 @@ Game::Game() {
     _sorce = 0;
 }
 
-Game::~Game() {}
+Game::~Game() {
+    delete [] _checkerboard;
+}
 
 void Game::start() {
     printf("Up: \'w\', Down: \'s\', Left: \'a\', Right: \'d\'\n");
@@ -47,6 +49,12 @@ void Game::start() {
 
         printf("\n");
     }
+}
+
+void Game::reset() {
+    initCheckerBoard();
+    setupEmptyList();
+    _sorce = 0;
 }
 
 int** Game::getCopyCheckerboard() {
