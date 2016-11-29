@@ -12,7 +12,7 @@ Game::Game() {
 }
 
 Game::~Game() {
-    delete [] _checkerboard;
+    deleteCheckerboard();
 }
 
 void Game::start() {
@@ -52,6 +52,7 @@ void Game::start() {
 }
 
 void Game::reset() {
+    deleteCheckerboard();
     initCheckerBoard();
     setupEmptyList();
     _sorce = 0;
@@ -112,6 +113,14 @@ void Game::initCheckerBoard() {
             _checkerboard[row][col] = 0;
         }
     }
+}
+
+void Game::deleteCheckerboard() {
+    for (int row = 0; row < CHECKERBOARD_LENGTH; row++) {
+        delete [] _checkerboard[row];
+    }
+
+    delete [] _checkerboard;
 }
 
 void Game::setupEmptyList() {
