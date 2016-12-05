@@ -8,7 +8,9 @@ LinkedList::LinkedList() {
     _tail = NULL;
 }
 
-LinkedList::~LinkedList() {}
+LinkedList::~LinkedList() {
+    removeAll();
+}
 
 int LinkedList::size() {
     return _length;
@@ -57,6 +59,14 @@ void LinkedList::remove(int index) {
     }
 
     _length -= 1;
+}
+
+void LinkedList::removeAll() {
+    while(_head != NULL) {
+        LinkedNode *temp = (*_head).next;
+        delete _head;
+        _head = temp;
+    }
 }
 
 CheckerboardIndex LinkedList::get(int index) {
