@@ -9,7 +9,7 @@ LinkedList::LinkedList() {
 }
 
 LinkedList::~LinkedList() {
-    removeAll();
+    clear();
 }
 
 int LinkedList::size() {
@@ -61,14 +61,6 @@ void LinkedList::remove(int index) {
     _length -= 1;
 }
 
-void LinkedList::removeAll() {
-    while(_head != NULL) {
-        LinkedNode *temp = (*_head).next;
-        delete _head;
-        _head = temp;
-    }
-}
-
 CheckerboardIndex LinkedList::get(int index) {
     if (_length <= index) {
         printf("Out of list size: %d\n", index);
@@ -92,19 +84,13 @@ bool LinkedList::isEmpty() {
 }
 
 void LinkedList::clear() {
-    if (_length > 0) {
-        LinkedNode *temp = _head;
-        LinkedNode *del_node = temp;
-        for (int idx = 0; idx < _length; idx++) {
-            if (idx < _length - 1) {
-                temp = (*temp).next;
-            }
-            delete [] del_node;
-            del_node = temp;
-        }
-
-        _head = NULL;
-        _tail = NULL;
-        _length = 0;
+    while(_head != NULL) {
+        LinkedNode *temp = (*_head).next;
+        delete _head;
+        _head = temp;
     }
+
+    _head = NULL;
+    _tail = NULL;
+    _length = 0;
 }
